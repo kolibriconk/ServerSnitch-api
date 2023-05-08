@@ -25,5 +25,16 @@ services:
     restart: always
     ports:
       - "8080:80"
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    links:
+      - database
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
 volumes:
   dbdata:
+  grafana-data:
