@@ -1,25 +1,25 @@
 import mysql.connector
-from enum import Enum
+from enum import IntEnum
 
 
 class DatabaseContext:
     _instance = None
 
-    class DataType(Enum):
-        BOOL = 0
-        INT = 1
-        FLOAT = 2
-        STRING = 3
+    class DataType(IntEnum):
+        BOOL = 1
+        INT = 2
+        FLOAT = 3
+        STRING = 4
 
-    class ActionType(Enum):
-        START = 0
-        REBOOT = 1
+    class ActionType(IntEnum):
+        START = 1
+        REBOOT = 2
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.cnx = mysql.connector.connect(user='root', password='FI!!612Y0s',
-                                                        host='192.168.1.100', database='server_snitch')
+            cls._instance.cnx = mysql.connector.connect(user="monitor", password="bJ3@RnXi*m",
+                                                        host="localhost", database="server_snitch")
         return cls._instance
 
     def __del__(self):
@@ -31,7 +31,13 @@ class DatabaseContext:
     def store_value(self, name, value, type, device_id):
         cursor = self.get_cursor()
         cursor.execute("INSERT INTO DataValue (Id, Name, Value, Type, DeviceId) "
-                       "VALUES (NULL, %s, %s, %d, %s)", (name, value, type, device_id))
+                       "VALUES (NULL, %s, %s, %s, %s)", (name, value, int(type), device_id))
         self.cnx.commit()
         cursor.close()
 
+    def is_device_registered(self, device_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT EUI FROM Device WHERE EUI = %s", (device_id,))
+        result = cursor.fetchone()
+        cursor.close()
+        return result is not None
