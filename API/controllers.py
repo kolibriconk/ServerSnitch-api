@@ -1,5 +1,5 @@
 from flask import Flask, request
-from database import DatabaseContext
+from Database.database import DatabaseContext
 
 app = Flask(__name__)
 

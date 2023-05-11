@@ -28,6 +28,8 @@ class DatabaseContext:
     def get_cursor(self):
         return self.cnx.cursor()
 
+    # API methods
+
     def store_value(self, name, value, type, device_id):
         cursor = self.get_cursor()
         cursor.execute("INSERT INTO DataValue (Id, Name, Value, Type, DeviceId) "
@@ -41,3 +43,43 @@ class DatabaseContext:
         result = cursor.fetchone()
         cursor.close()
         return result is not None
+
+    # Web methods
+
+    def get_user(self, username, password_hash):
+        # get the user if the hash matches and the user too
+        cursor = self.get_cursor()
+        cursor.execute("SELECT Id FROM User WHERE User = %s AND PwdHash = %s", (username, password_hash))
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result[0]
+
+    def get_groups(self, user_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT Id, Alias, Description FROM UserDeviceGroup udg INNER JOIN DeviceGroup dg ON "
+                          "udg.DeviceGropuId = dg.Id WHERE udg.UserId = %s", (user_id,))
+
+        result = cursor.fetchall()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result
+
+    def get_devices(self, group_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT EUI, Alias, Description FROM Device WHERE GroupId = %s", (group_id,))
+
+        result = cursor.fetchall()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result
+

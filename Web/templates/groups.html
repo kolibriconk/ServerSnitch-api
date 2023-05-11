@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Groups</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='groups.css') }}">
+  </head>
+  <body>
+    <h1>Groups</h1>
+    <div class="grid-container">
+      {% for group in groups %}
+      <div class="grid-item">
+        <h2>{{ group[1] }}</h2>
+        <p>ID: {{ group[0] }}</p>
+        <p>{{ group[2] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

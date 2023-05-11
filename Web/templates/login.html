@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Log in</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+    function hashPassword(password) {
+        // Use the SHA-256 hashing algorithm to hash the password
+        var hash = CryptoJS.SHA256(password);
+        return hash.toString(CryptoJS.enc.Hex);
+      }
+      function login() {
+        // Get the username and password entered by the user
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        // Hash the password before sending it to the server
+        var hashedPassword = hashPassword(password);
+        // Send a POST request to the server with the username and hashed password
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            // Login was successful
+            document.getElementById('message').textContent = 'Logged in successfully';
+            // get result from server
+            var result = JSON.parse(xhr.responseText);
+            location.href = '/groups?id=' + result;
+          } else {
+            // Login failed
+            document.getElementById('message').textContent = 'Invalid username or password';
+          }
+        };
+        xhr.send(JSON.stringify({username: username, password: hashedPassword}));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+      <input type="button" id="submit" value="Login" onclick="login()">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <div id="message"></div>
+  </body>
+</html>
