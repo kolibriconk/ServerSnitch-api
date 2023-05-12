@@ -83,3 +83,28 @@ class DatabaseContext:
         else:
             return result
 
+    def get_services(self, device_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT DISTINCT(Name) FROM DataValue WHERE DeviceId = %s", (device_id,))
+
+        result = cursor.fetchall()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result
+
+    def get_data(self, service_name, device_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT Name, Value, Timestamp, Type FROM DataValue WHERE Name = %s AND DeviceId = %s", (service_name, device_id))
+
+        result = cursor.fetchall()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result
+
+

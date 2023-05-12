@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Services</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='services.css') }}">
+  </head>
+  <body>
+    <h1>Services</h1>
+    <div class="services-container">
+      {% for service in services %}
+      <div class="service">
+        <h2>{{  service[0] }}</h2>
+        <div id="plot-{{ service[0] }}"></div>
+        <script>
+          var x = {{ service[2]|tojson }};
+          var y = {{ service[1]|tojson }};
+          var data = [{
+            x: x,
+            y: y,
+            type: 'scatter'
+          }];
+          var layout = {
+            title: '{{ service.name }}',
+            xaxis: {
+              title: 'X Axis'
+            },
+            yaxis: {
+              title: 'Y Axis'
+            }
+          };
+          Plotly.newPlot('plot-{{ service[0] }}', data, layout);
+        </script>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
