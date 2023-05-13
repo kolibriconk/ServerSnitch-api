@@ -28,12 +28,12 @@
       stopButtons.forEach(button => {
         button.addEventListener('click', () => {
           const deviceId = button.dataset.deviceId;
-          fetch(`/api/devices/${deviceId}/stop`)
+          fetch(`/devices/${deviceId}/start`)
             .then(response => {
               if (!response.ok) {
-                throw new Error('Error stopping device');
+                throw new Error('Error starting device');
               }
-              console.log(`Device ${deviceId} stopped successfully`);
+              console.log(response.text());
             })
             .catch(error => console.error(error));
         });
@@ -43,12 +43,12 @@
       restartButtons.forEach(button => {
         button.addEventListener('click', () => {
           const deviceId = button.dataset.deviceId;
-          fetch(`/api/devices/${deviceId}/restart`)
+          fetch(`/devices/${deviceId}/restart`)
             .then(response => {
               if (!response.ok) {
                 throw new Error('Error restarting device');
               }
-              console.log(`Device ${deviceId} restarted successfully`);
+              console.log(response.text());
             })
             .catch(error => console.error(error));
         });

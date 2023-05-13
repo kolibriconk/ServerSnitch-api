@@ -38,6 +38,26 @@ def get_devices():
     return render_template('devices.html', devices=devices)
 
 
+@app.route('/devices/<device_id>/restart')
+def restart_device(device_id):
+    if DatabaseContext().get_device(device_id) is None:
+        return 'Device not found', 404
+    else:
+        # TODO: Make a request to the API to restart the device
+
+        return 'Device will be restarted shortly', 200
+
+
+@app.route('/devices/<device_id>/start')
+def start_device(device_id):
+    if DatabaseContext().get_device(device_id) is None:
+        return 'Device not found', 404
+    else:
+        # TODO: Make a request to the API to restart the device
+
+        return 'Device will be started shortly', 200
+
+
 @app.route('/services')
 def get_services():
     id = request.args.get('id')

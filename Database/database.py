@@ -107,4 +107,16 @@ class DatabaseContext:
         else:
             return result
 
+    def get_device(self, device_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT EUI FROM Device WHERE EUI = %s", (device_id,))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result[0]
+
 
