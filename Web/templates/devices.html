@@ -3,6 +3,9 @@
   <head>
     <title>Devices</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='devices.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/brands.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/solid.css') }}">
   </head>
   <body>
     <h1>Devices</h1>
@@ -12,7 +15,44 @@
         <h2>{{ device[1] }}</h2>
         <p>EUI: {{ device[0] }}</p>
         <p>{{ device[2] }}</p>
+        <button class="stop-button" data-device-id="{{ device[0] }}"><i class="fa-solid fa-power-off"></i> Turn ON</button>
+        <button class="reset-button" data-device-id="{{ device[0] }}"><i class="fa-solid fa-refresh"></i> Reboot</button>
       </div>
       {% endfor %}
+
+    <script>
+      const stopButtons = document.querySelectorAll('.stop-button');
+      const restartButtons = document.querySelectorAll('.reset-button');
+
+      // Attach click event listeners to all stop buttons
+      stopButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const deviceId = button.dataset.deviceId;
+          fetch(`/api/devices/${deviceId}/stop`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Error stopping device');
+              }
+              console.log(`Device ${deviceId} stopped successfully`);
+            })
+            .catch(error => console.error(error));
+        });
+      });
+
+      // Attach click event listeners to all restart buttons
+      restartButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const deviceId = button.dataset.deviceId;
+          fetch(`/api/devices/${deviceId}/restart`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Error restarting device');
+              }
+              console.log(`Device ${deviceId} restarted successfully`);
+            })
+            .catch(error => console.error(error));
+        });
+      });
+    </script>
     </div>
   </body>

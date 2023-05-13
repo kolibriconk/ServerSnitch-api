@@ -38,3 +38,26 @@ p {
   font-size: 16px;
   color: #666;
 }
+
+.stop-button, .reset-button {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.stop-button {
+  color: red;
+}
+
+.reset-button {
+  color: blue;
+}
+
+.stop-button:hover, .reset-button:hover {
+  color: gray;
+}
+
+.stop-button + .reset-button {
+  margin-left: 10px;
+}
