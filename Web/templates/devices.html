@@ -17,12 +17,14 @@
         <p>{{ device[2] }}</p>
         <button class="stop-button" data-device-id="{{ device[0] }}"><i class="fa-solid fa-power-off"></i> Turn ON</button>
         <button class="reset-button" data-device-id="{{ device[0] }}"><i class="fa-solid fa-refresh"></i> Reboot</button>
+        <button class="trend-button" data-device-id="{{ device[0] }}"><i class="fa-solid fa-chart-line"></i> Trend</button>
       </div>
       {% endfor %}
 
     <script>
       const stopButtons = document.querySelectorAll('.stop-button');
       const restartButtons = document.querySelectorAll('.reset-button');
+      const trendButtons = document.querySelectorAll('.trend-button');
 
       // Attach click event listeners to all stop buttons
       stopButtons.forEach(button => {
@@ -51,6 +53,15 @@
               console.log(response.text());
             })
             .catch(error => console.error(error));
+        });
+      });
+
+      // Attach click event listeners to all trend buttons
+      trendButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const deviceId = button.dataset.deviceId;
+
+          location.href = "/devices/" + deviceId + "/trend";
         });
       });
     </script>

@@ -58,15 +58,14 @@ def start_device(device_id):
         return 'Device will be started shortly', 200
 
 
-@app.route('/services')
-def get_services():
-    id = request.args.get('id')
-    services = DatabaseContext().get_services(id)
+@app.route('/devices/<device_id>/trend')
+def get_services(device_id):
+    services = DatabaseContext().get_services(device_id)
 
     plots_data = []
 
     for service in services:
-        data_list = DatabaseContext().get_data(service[0], id)
+        data_list = DatabaseContext().get_data(service[0], device_id)
         x = []
         y = []
         for data in data_list:

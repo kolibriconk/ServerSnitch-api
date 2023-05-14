@@ -39,7 +39,7 @@ p {
   color: #666;
 }
 
-.stop-button, .reset-button {
+.stop-button, .reset-button, .trend-button {
   border: none;
   background: none;
   font-size: 20px;

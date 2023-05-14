@@ -8,10 +8,11 @@
     <h1>Groups</h1>
     <div class="grid-container">
       {% for group in groups %}
-      <div class="grid-item">
+      <div class="grid-item" onclick="location.href='/devices?id={{ group[0] }}'">
         <h2>{{ group[1] }}</h2>
         <p>ID: {{ group[0] }}</p>
         <p>{{ group[2] }}</p>
+        <p>Click to see devices</p>
       </div>
       {% endfor %}
     </div>

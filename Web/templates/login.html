@@ -22,7 +22,7 @@
         xhr.onload = function() {
           if (xhr.status === 200) {
             // Login was successful
-            document.getElementById('message').textContent = 'Logged in successfully';
+            document.getElementById('message').textContent = 'Logged in successfully, redirecting ...';
             // get result from server
             var result = JSON.parse(xhr.responseText);
             location.href = '/groups?id=' + result;
@@ -41,10 +41,20 @@
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required><br><br>
       <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required><br><br>
+      <input type="password" id="password" name="password"  required><br><br>
       <input type="button" id="submit" value="Login" onclick="login()">
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <div id="message"></div>
+
+  <script>
+    var input = document.getElementById("password");
+    input.addEventListener("keypress", function (event){
+      if (event.key === "Enter"){
+        event.preventDefault();
+        login();
+      }
+    });
+  </script>
   </body>
 </html>
