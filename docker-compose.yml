@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: server_snitch
       MYSQL_USER: monitor
       MYSQL_PASSWORD: bJ3@RnXi*m
+    restart: always
     ports:
       - "3306:3306"
     volumes:
