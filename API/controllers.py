@@ -31,8 +31,13 @@ def monitor_data():
 
 @app.route('/pybytes/integration', methods=['POST'])
 def pybytes_integration():
+    """This message enters with a byte array
+    The first part is the EUI of the device
+    The second part has the lan status of the server
+    And the last part has the wan status of the server"""
     print("Entered pybytes_integration")
     data = request.get_json()
+
     print(data)
 
     return "Success", 200
