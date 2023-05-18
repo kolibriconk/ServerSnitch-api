@@ -29,5 +29,12 @@ def monitor_data():
         return "Device not registered", 400
 
 
+@app.route('/pybytes/integration', methods=['POST'])
+def pybytes_integration():
+    print("Entered pybytes_integration")
+    data = request.get_json()
+    print(data)
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=80)
