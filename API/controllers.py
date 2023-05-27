@@ -14,9 +14,10 @@ def monitor_data():
         for service in services.keys():
             print(service)
             name = services[service]["name"]
-            for key in ["cpu_percent", "memory_rss"]:
+
+            for key in ["status", "cpu_percent", "memory_rss"]:
                 data_name = f"{name}.{key}"
-                type = DatabaseContext.DataType.FLOAT
+                type = DatabaseContext.DataType.BOOL if key == "status" else DatabaseContext.DataType.FLOAT
                 DatabaseContext().store_value(data_name, services[service][key], type, device_id)
 
         for key in ["load_avg", "mem"]:
@@ -31,8 +32,13 @@ def monitor_data():
 
 @app.route('/pybytes/integration', methods=['POST'])
 def pybytes_integration():
+    """This message enters with a byte array
+    The first part is the EUI of the device
+    The second part has the lan status of the server
+    And the last part has the wan status of the server"""
     print("Entered pybytes_integration")
     data = request.get_json()
+
     print(data)
 
     return "Success", 200
