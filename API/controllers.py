@@ -74,5 +74,15 @@ def pybytes_integration():
     return "Success", 200
 
 
+@app.route('/ttn/integration', methods=['POST'])
+def ttn_integration():
+    """
+    This message enters with a byte array
+    :return:
+    """
+
+    raise NotImplementedError
+
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=80)
