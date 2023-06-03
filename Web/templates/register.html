@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+      function hashPassword(password) {
+        var hash = CryptoJS.SHA256(password);
+        return hash.toString(CryptoJS.enc.Hex);
+      }
+
+      function register() {
+        var name = document.getElementById('name').value;
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+          document.getElementById('message').textContent = 'Password does not match';
+          return;
+        }
+
+        var hashedPassword = hashPassword(password);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/register');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            document.getElementById('message').textContent = 'Register success, redirecting ...';
+            location.href = '/login';
+          } else {
+            document.getElementById('message').textContent = 'User already exists, try another username';
+          }
+        };
+        xhr.send(JSON.stringify({name: name, username: username, password: hashedPassword}));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Sign Up</h1>
+    <form>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br><br>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+      <label for="confirmPassword">Confirm password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+      <input type="button" id="submit" value="Registrarse" onclick="register()">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <div id="message" class="signup-p"></div>
+  </body>
+</html>

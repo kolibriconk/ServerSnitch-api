@@ -58,6 +58,58 @@ class DatabaseContext:
         else:
             return result[0]
 
+    def check_user(self, username):
+        # return true if the user exists
+        cursor = self.get_cursor()
+        cursor.execute("SELECT Id FROM User WHERE User = %s", (username,))
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result is None:
+            return False
+        else:
+            return True
+
+    def create_user(self, name, username, password_hash):
+        try:
+            cursor = self.get_cursor()
+            cursor.execute("INSERT INTO User (Id, Name, User, PwdHash) VALUES (NULL, %s, %s, %s)", (name, username, password_hash))
+            self.cnx.commit()
+            cursor.close()
+
+            cursor = self.get_cursor()
+            cursor.execute("SELECT Id FROM User WHERE User = %s AND PwdHash = %s", (username, password_hash))
+            result = cursor.fetchone()
+            cursor.close()
+        except:
+            return False
+
+        if result is None:
+            return False
+        else:
+            return True
+
+    def create_group(self, name, description, user_id):
+        try:
+            cursor = self.get_cursor()
+            cursor.execute("INSERT INTO DeviceGroup (Id, Alias, Description) VALUES (NULL, %s, %s)", (name, description))
+            group_id = cursor.lastrowid
+            cursor.execute("INSERT INTO UserDeviceGroup (UserId, DeviceGropuId) VALUES (%s, %s)", (user_id, group_id))
+            self.cnx.commit()
+            cursor.close()
+
+            cursor = self.get_cursor()
+            cursor.execute("SELECT Id FROM DeviceGroup WHERE Id = %s", (group_id,))
+            result = cursor.fetchone()
+            cursor.close()
+        except:
+            return False
+
+        if result is None:
+            return False
+        else:
+            return True
+
     def get_groups(self, user_id):
         cursor = self.get_cursor()
         cursor.execute("SELECT Id, Alias, Description FROM UserDeviceGroup udg INNER JOIN DeviceGroup dg ON "
@@ -82,6 +134,25 @@ class DatabaseContext:
             return None
         else:
             return result
+
+    def create_device(self, eui, mac, name, description, group_id, user_id):
+        try:
+            cursor = self.get_cursor()
+            cursor.execute("INSERT INTO Device (EUI, MAC, Alias, Description, GroupId, UserId) VALUES (%s, %s, %s, %s, %s, %s)", (eui, mac, name, description, group_id, user_id))
+            self.cnx.commit()
+            cursor.close()
+
+            cursor = self.get_cursor()
+            cursor.execute("SELECT EUI FROM Device WHERE EUI = %s", (eui,))
+            result = cursor.fetchone()
+            cursor.close()
+        except:
+            return False
+
+        if result is None:
+            return False
+        else:
+            return True
 
     def get_services(self, device_id):
         cursor = self.get_cursor()

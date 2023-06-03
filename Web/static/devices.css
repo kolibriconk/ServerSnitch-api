@@ -61,3 +61,24 @@ p {
 .stop-button + .reset-button {
   margin-left: 10px;
 }
+
+.float-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.float-button:hover {
+  background-color: #3e8e41;
+}
+
+.float-button a {
+  color: white;
+  text-decoration: none;
+}

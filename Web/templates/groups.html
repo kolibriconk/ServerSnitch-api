@@ -3,18 +3,25 @@
   <head>
     <title>Groups</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='groups.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/brands.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/solid.css') }}">
   </head>
   <body>
     <h1>Groups</h1>
     <div class="grid-container">
       {% for group in groups %}
-      <div class="grid-item" onclick="location.href='/devices?id={{ group[0] }}'">
+      <div class="grid-item" onclick="location.href='/devices?group_id={{ group[0] }}&user_id={{ user_id }}'">
         <h2>{{ group[1] }}</h2>
         <p>ID: {{ group[0] }}</p>
         <p>{{ group[2] }}</p>
         <p>Click to see devices</p>
       </div>
       {% endfor %}
+    </div>
+
+    <div class="float-button">
+        <i class="fa-solid fa-plus-circle"> </i><a href="/groups/new?user_id={{ user_id }}"> New Group</a>
     </div>
   </body>
 </html>

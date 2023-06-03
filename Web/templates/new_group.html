@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Add Group</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+      function addGroup() {
+        var alias = document.getElementById('alias').value;
+        var description = document.getElementById('description').value;
+        var user_id = document.getElementById('user_id').value;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/groups/new');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            document.getElementById('message').textContent = 'Group created successfully redirecting ...';
+            location.href = "/groups?id=" + user_id;
+          } else {
+            document.getElementById('message').textContent = 'Error adding group';
+          }
+        };
+        xhr.send(JSON.stringify({alias: alias, description: description, user_id: user_id}));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Add Group</h1>
+    <form>
+      <label for="alias">Alias:</label>
+      <input type="text" id="alias" name="alias" required><br><br>
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description" required><br><br>
+      <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
+      <input type="button" id="submit" value="Add Group" onclick="addGroup()">
+    </form>
+    <div id="message"></div>
+  </body>
+</html>

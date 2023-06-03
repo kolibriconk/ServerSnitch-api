@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Add Device</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+      function addDevice() {
+        var eui = document.getElementById('eui').value;
+        var mac = document.getElementById('mac').value;
+        var alias = document.getElementById('alias').value;
+        var description = document.getElementById('description').value;
+        var userId = document.getElementById('user_id').value;
+        var groupId = document.getElementById('group_id').value;
+
+        // Envía una solicitud POST al servidor con los datos del dispositivo
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/devices/new');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            // Dispositivo añadido exitosamente
+            document.getElementById('message').textContent = 'Device added successfully, redirecting...';
+            location.href = "/devices?group_id=" + groupId + "&user_id=" + userId;
+          } else {
+            // Error al añadir el dispositivo
+            document.getElementById('message').textContent = 'Error adding device, EUI or MAC may be registered.';
+          }
+        };
+        xhr.send(JSON.stringify({eui: eui, mac: mac, alias: alias, description: description, user_id: userId, group_id: groupId}));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Add Device</h1>
+    <form>
+      <label for="eui">EUI:</label>
+      <input type="text" id="eui" name="eui" required><br><br>
+      <label for="mac">MAC:</label>
+      <input type="text" id="mac" name="mac" required><br><br>
+      <label for="alias">Alias:</label>
+      <input type="text" id="alias" name="alias" required><br><br>
+      <label for="description">Description:</label>
+      <input type="text" id="description" name="description" required><br><br>
+      <input type="hidden" id="user_id" name="user_id" value="{{ user_id }}">
+      <input type="hidden" id="group_id" name="group_id" value="{{ group_id }}">
+      <input type="button" id="submit" value="Add Device" onclick="addDevice()">
+    </form>
+    <div id="message"></div>
+  </body>
+</html>
