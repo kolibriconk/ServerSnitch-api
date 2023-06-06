@@ -4,9 +4,33 @@
     <title>Services</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='services.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/brands.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/solid.css') }}">
   </head>
   <body>
     <h1>Services</h1>
+    <div class="service2">
+      <table class="statuses-table">
+        <tr>
+          {% for status in statuses %}
+            <td>
+              <span class="status-icon">
+                {% if status[2] %}
+                  <i class="fa-solid fa-check status-true"></i>
+                {% else %}
+                  <i class="fa-solid fa-exclamation status-false"></i>
+                {% endif %}
+              </span>
+              {{ status[0] }} ({{ status[1] }})
+            </td>
+            {% if loop.index is divisibleby(2) %}
+              </tr><tr>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </table>
+    </div>
     <div class="services-container">
       {% for service in services %}
       <div class="service">

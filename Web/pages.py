@@ -87,8 +87,8 @@ def get_devices():
 
 @app.route('/devices/new')
 def add_device():
-    group_id = request.args.get('group_id')
     user_id = request.args.get('user_id')
+    group_id = request.args.get('group_id')
     return render_template('new_device.html', group_id=group_id, user_id=user_id)
 
 
@@ -137,8 +137,10 @@ def start_device(device_id):
 @app.route('/devices/<device_id>/trend')
 def get_services(device_id):
     services = DatabaseContext().get_services(device_id)
+    statuses = DatabaseContext().get_statuses(device_id)
 
     plots_data = []
+    status_data = []
 
     for service in services:
         data_list = DatabaseContext().get_data(service[0], device_id)
@@ -158,7 +160,12 @@ def get_services(device_id):
 
         plots_data.append((service[0], x, y))
 
-    return render_template('services.html', services=plots_data)
+    for status in statuses:
+        value = True if status[2] == '1' or status[2] == 1 or status[2] == "True" else False
+
+        status_data.append((status[0], status[1], value))
+
+    return render_template('services.html', services=plots_data, statuses=status_data)
 
 
 if __name__ == '__main__':

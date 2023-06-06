@@ -68,6 +68,8 @@ def pybytes_integration():
         # Get EUI from data and store system.status = False
         device_id = data[7:]
         DatabaseContext().store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
+        DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+        DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
 
     print(data)
 
