@@ -36,7 +36,7 @@ p {
   margin: 0;
   margin-top: 10px;
   font-size: 16px;
-  color: #666;
+  color: midnightblue;
 }
 
 .float-button {
@@ -58,4 +58,12 @@ p {
 .float-button a {
   color: white;
   text-decoration: none;
+}
+
+.status-true {
+  background-color: springgreen;
+}
+
+.status-false {
+background-color: tomato;
 }

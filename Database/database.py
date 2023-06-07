@@ -154,7 +154,18 @@ class DatabaseContext:
         else:
             return True
 
-    STATUSES = "()"
+    def get_device_status(self, device_id):
+        cursor = self.get_cursor()
+        cursor.execute("SELECT DISTINCT(Name), `TimeStamp`, `Value` FROM DataValue WHERE DeviceId = %s "
+                       "AND Name = 'system.status' ORDER BY `TimeStamp` DESC", (device_id,))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        if result is None:
+            return None
+        else:
+            return result
 
     def get_services(self, device_id):
         cursor = self.get_cursor()

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, render_template, request, jsonify
 
 from Database.database import DatabaseContext
@@ -52,7 +54,25 @@ def get_groups():
     id = request.args.get('id')
     groups = DatabaseContext().get_groups(id)
 
-    return render_template('groups.html', groups=groups, user_id=id)
+    group_list = []
+    for group in groups:
+        group = list(group)
+        devices = DatabaseContext().get_devices(group[0])
+        group_status = 'True' if len(devices) != 0 else 'False'
+        device_status = 'False'
+        for device in devices:
+            status = DatabaseContext().get_device_status(device[0])
+            if status is not None:
+                device_status = 'False' if (datetime.now().timestamp() - status[1].timestamp()) > 600 else status[2]
+
+            if device_status != 'True':
+                group_status = 'False'
+                break
+
+        group.append(group_status)
+        group_list.append(group)
+
+    return render_template('groups.html', groups=group_list, user_id=id)
 
 
 @app.route('/groups/new')
@@ -82,7 +102,18 @@ def get_devices():
     group_id = request.args.get('group_id')
     devices = DatabaseContext().get_devices(group_id)
 
-    return render_template('devices.html', devices=devices, user_id=user_id, group_id=group_id)
+    device_list = []
+    for device in devices:
+        device = list(device)
+        status = DatabaseContext().get_device_status(device[0])
+
+        device.append('False')
+        if status is not None:
+            device[3] = 'False' if (datetime.now().timestamp() - status[1].timestamp()) > 600 else status[2]
+
+        device_list.append(device)
+
+    return render_template('devices.html', devices=device_list, user_id=user_id, group_id=group_id)
 
 
 @app.route('/devices/new')
