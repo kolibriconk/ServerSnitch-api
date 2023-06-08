@@ -12,7 +12,6 @@ def monitor_data():
 
     if DatabaseContext().is_device_registered(device_id):
         for service in services.keys():
-            print(service)
             name = services[service]["name"]
 
             for key in ["status", "cpu_percent", "memory_rss"]:
@@ -34,7 +33,7 @@ def monitor_data():
         return "Device not registered", 400
 
 
-@app.route('/pybytes/integration', methods=['POST'])
+@app.route('/pybytes/integration', methods=['GET'])
 def pybytes_integration():
     """This message enters with a byte array
     The first part is the EUI of the device
@@ -51,10 +50,11 @@ def pybytes_integration():
         if len(data) == len("pcup!0000000000000000"):
             print("storing just system.status")
             # Get EUI from data and store system.status = True
-            device_id = data[5:]
-            DatabaseContext().store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
-            DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
-            DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
+            device_id = data.split("!")[1]
+            db_context = DatabaseContext()
+            db_context.store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
+            db_context.store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+            db_context.store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
         elif len(data) > len("pcup!0000000000000000"):
             print("storing system.status, system.wan, system.lan and services")
             # Get EUI from data, store system.status = True, get lan, wan status and store them
@@ -67,9 +67,11 @@ def pybytes_integration():
             print("services: ", services)
             print("wan: ", wan)
             print("lan: ", lan)
-            DatabaseContext().store_value("system.wan", wan, DatabaseContext.DataType.BOOL, device_id)
-            DatabaseContext().store_value("system.lan", lan, DatabaseContext.DataType.BOOL, device_id)
-            DatabaseContext().store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
+            db_context = DatabaseContext()
+
+            db_context.store_value("system.wan", wan, DatabaseContext.DataType.BOOL, device_id)
+            db_context.store_value("system.lan", lan, DatabaseContext.DataType.BOOL, device_id)
+            db_context.store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
 
             # for service in services.keys():
             #     name = services[service]["name"]
@@ -80,9 +82,10 @@ def pybytes_integration():
         print("pcdown!")
         # Get EUI from data and store system.status = False
         device_id = data[7:]
-        DatabaseContext().store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
-        DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
-        DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
+        db_context = DatabaseContext()
+        db_context.store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
+        db_context.store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+        db_context.store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
 
     print(data)
 
