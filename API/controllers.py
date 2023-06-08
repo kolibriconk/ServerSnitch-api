@@ -55,7 +55,9 @@ def pybytes_integration():
             device_id = data.split("!")[1]
             db_context = DatabaseContext()
             db_context.store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
             db_context.store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
             db_context.store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
         elif len(data) > len("pcup!0000000000000000"):
             print("storing system.status, system.wan, system.lan and services")
@@ -70,7 +72,6 @@ def pybytes_integration():
             print("wan: ", wan)
             print("lan: ", lan)
             db_context = DatabaseContext()
-
             db_context.store_value("system.wan", wan, DatabaseContext.DataType.BOOL, device_id)
             time.sleep(2)
             db_context.store_value("system.lan", lan, DatabaseContext.DataType.BOOL, device_id)
@@ -88,7 +89,9 @@ def pybytes_integration():
         device_id = data[7:]
         db_context = DatabaseContext()
         db_context.store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
+        time.sleep(2)
         db_context.store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+        time.sleep(2)
         db_context.store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
 
     print(data)
