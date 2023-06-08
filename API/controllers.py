@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, request
 from Database.database import DatabaseContext
 
@@ -33,7 +35,7 @@ def monitor_data():
         return "Device not registered", 400
 
 
-@app.route('/pybytes/integration', methods=['GET'])
+@app.route('/pybytes/integration', methods=['POST'])
 def pybytes_integration():
     """This message enters with a byte array
     The first part is the EUI of the device
@@ -70,7 +72,9 @@ def pybytes_integration():
             db_context = DatabaseContext()
 
             db_context.store_value("system.wan", wan, DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
             db_context.store_value("system.lan", lan, DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
             db_context.store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
 
             # for service in services.keys():
