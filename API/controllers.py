@@ -43,6 +43,9 @@ def pybytes_integration():
     print("Entered pybytes_integration")
     data = request.get_json()
     print("data: ", data)
+    if 'payload' in data:
+        data = data['payload']
+        print("data: ", data)
 
     if "pcup!" in data:
         print("pcup!")
