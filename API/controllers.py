@@ -42,29 +42,40 @@ def pybytes_integration():
     And the last part has the wan status of the server"""
     print("Entered pybytes_integration")
     data = request.get_json()
+    print("data: ", data)
 
     if "pcup!" in data:
+        print("pcup!")
         if len(data) == len("pcup!0000000000000000"):
+            print("storing just system.status")
             # Get EUI from data and store system.status = True
             device_id = data[5:]
             DatabaseContext().store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
+            DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+            DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
         elif len(data) > len("pcup!0000000000000000"):
+            print("storing system.status, system.wan, system.lan and services")
             # Get EUI from data, store system.status = True, get lan, wan status and store them
             device_id = data[5:]
             splitted = data.split("!")
             wan = splitted[2]
             lan = splitted[3]
             services = dict(splitted[4])
+            print("services: ", services)
+            print("wan: ", wan)
+            print("lan: ", lan)
             DatabaseContext().store_value("system.wan", wan, DatabaseContext.DataType.BOOL, device_id)
             DatabaseContext().store_value("system.lan", lan, DatabaseContext.DataType.BOOL, device_id)
             DatabaseContext().store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
-
-            for service in services.keys():
-                name = services[service]["name"]
-                data_name = f"{name}.status"
-                DatabaseContext().store_value(data_name, service["status"], DatabaseContext.DataType.BOOL, device_id)
+            print("type(services): ", type(services))
+            if isinstance(services, dict):
+                for service in services.keys():
+                    name = services[service]["name"]
+                    data_name = f"{name}.status"
+                    DatabaseContext().store_value(data_name, service["status"], DatabaseContext.DataType.BOOL, device_id)
 
     elif "pcdown!" in data and len(data) == len("pcdown!0000000000000000"):
+        print("pcdown!")
         # Get EUI from data and store system.status = False
         device_id = data[7:]
         DatabaseContext().store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
