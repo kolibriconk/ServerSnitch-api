@@ -1,10 +1,16 @@
 from datetime import datetime
 
 from flask import Flask, render_template, request, jsonify
+from paho.mqtt import publish
 
 from Database.database import DatabaseContext
 
 app = Flask(__name__)
+
+API_KEY = "NNSXS.NGQSNYVXSKXZGFCMGNBPYEUQVE7QBUQR3UEZZUA.XEM5I3EQVKL6B7I3BVY33NKO3HCBK4NEMJQVKSVVEV7RPPGFYAFA"
+HOSTNAME = "eu1.cloud.thethings.network"
+USERNAME = "server-snitch@ttn"
+AUTH = {'username': USERNAME, 'password': API_KEY}
 
 
 @app.route('/login')
@@ -150,9 +156,8 @@ def restart_device(device_id):
     if DatabaseContext().get_device(device_id) is None:
         return 'Device not found', 404
     else:
-        # TODO: Make a request to the API to restart the device
-
-        return 'Device will be restarted shortly', 200
+        send_message("AA==", device_id)  # AA== is 00 in base64
+        return 'Reboot message published to queue', 200
 
 
 @app.route('/devices/<device_id>/start')
@@ -160,9 +165,15 @@ def start_device(device_id):
     if DatabaseContext().get_device(device_id) is None:
         return 'Device not found', 404
     else:
-        # TODO: Make a request to the API to restart the device
+        send_message("AQ==", device_id)  # AQ== is 01 in base64
+        return 'Power message published to queue', 200
 
-        return 'Device will be started shortly', 200
+
+def send_message(command, eui):
+    eui = f"eui-{eui.lower()}"
+    endpoint = f"v3/server-snitch@ttn/devices/{eui}/down/push"
+    message = '{"downlinks": [{"f_port": 1, "frm_payload": "' + command + '", "priority": "NORMAL"}]}'  # AQ== is 01 in base64
+    publish.single(endpoint, message, hostname=HOSTNAME, auth=AUTH)
 
 
 @app.route('/devices/<device_id>/trend')
