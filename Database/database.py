@@ -26,7 +26,7 @@ class DatabaseContext:
         self.cnx.close()
 
     def get_cursor(self):
-        return self.cnx.cursor()
+        return self.cnx.cursor(buffered=True)
 
     # API methods
 
