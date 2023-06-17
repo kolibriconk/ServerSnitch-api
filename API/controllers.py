@@ -99,14 +99,43 @@ def pybytes_integration():
     return "Success", 200
 
 
-@app.route('/ttn/integration', methods=['POST'])
+@app.route('/lora/integration', methods=['POST'])
 def ttn_integration():
     """
     This message enters with a byte array
     :return:
     """
+    # This method will get a json with dev_eui and decoded_payload the payload will by 3 bytes, status, wan, lan
 
-    raise NotImplementedError
+    data = request.get_json()
+    device_id = data["end_device_ids"]["dev_eui"]
+    payload = data["uplink_message"]["decoded_payload"]
+
+    print("data: ", data)
+    print("device_id: ", device_id)
+    print("payload: ", payload)
+
+    if payload[0] == "1" or payload[0] == 0x01:
+        DatabaseContext().store_value("system.status", "True", DatabaseContext.DataType.BOOL, device_id)
+        time.sleep(2)
+        if payload[1] == "1" or payload[1] == 0x01:
+            DatabaseContext().store_value("system.wan", "True", DatabaseContext.DataType.BOOL, device_id)
+        else:
+            DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
+        if payload[2] == "1" or payload[2] == 0x01:
+            DatabaseContext().store_value("system.lan", "True", DatabaseContext.DataType.BOOL, device_id)
+        else:
+            DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
+            time.sleep(2)
+    else:
+        DatabaseContext().store_value("system.status", "False", DatabaseContext.DataType.BOOL, device_id)
+        time.sleep(2)
+        DatabaseContext().store_value("system.wan", "False", DatabaseContext.DataType.BOOL, device_id)
+        time.sleep(2)
+        DatabaseContext().store_value("system.lan", "False", DatabaseContext.DataType.BOOL, device_id)
+
+    return "Success", 200
 
 
 if __name__ == '__main__':
