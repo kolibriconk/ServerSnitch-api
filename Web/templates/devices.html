@@ -39,6 +39,8 @@
             .then(response => {
               if (!response.ok) {
                 throw new Error('Error starting device');
+              }else{
+                  alert("Start message successfully sent to device");
               }
               console.log(response.text());
             })
@@ -54,6 +56,8 @@
             .then(response => {
               if (!response.ok) {
                 throw new Error('Error restarting device');
+              }else{
+                  alert("Restart message successfully sent to device");
               }
               console.log(response.text());
             })
