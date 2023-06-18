@@ -218,4 +218,19 @@ class DatabaseContext:
         else:
             return result[0]
 
+    def log_action(self, device_id, action):
+        # Get user id from device
+        cursor = self.get_cursor()
+        cursor.execute("SELECT UserId FROM Device WHERE EUI = %s", (device_id,))
+        result = cursor.fetchone()
+        cursor.close()
 
+        if result is None:
+            return False
+        else:
+            user_id = result[0]
+            cursor = self.get_cursor()
+            cursor.execute("INSERT INTO ActionLog (UserId, DeviceId, Action) VALUES (%s, %s, %s)", (user_id, device_id, action))
+            self.cnx.commit()
+            cursor.close()
+            return True

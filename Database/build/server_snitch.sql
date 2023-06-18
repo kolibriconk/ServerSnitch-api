@@ -110,7 +110,7 @@ CREATE TABLE `UserDeviceGroup` (
 -- Indices de la tabla `ActionLog`
 --
 ALTER TABLE `ActionLog`
-  ADD PRIMARY KEY (`UserId`,`DeviceId`),
+  ADD KEY `UserAction` (`UserId`),
   ADD KEY `DeviceAction` (`DeviceId`);
 
 --

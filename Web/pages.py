@@ -157,6 +157,7 @@ def restart_device(device_id):
         return 'Device not found', 404
     else:
         send_message("AA==", device_id)  # AA== is 00 in base64
+        DatabaseContext().log_action(device_id, 'reboot')
         return 'Reboot message published to queue', 200
 
 
@@ -166,6 +167,7 @@ def start_device(device_id):
         return 'Device not found', 404
     else:
         send_message("AQ==", device_id)  # AQ== is 01 in base64
+        DatabaseContext().log_action(device_id, 'start')
         return 'Power message published to queue', 200
 
 
