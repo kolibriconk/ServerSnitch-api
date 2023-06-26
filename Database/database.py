@@ -182,9 +182,10 @@ class DatabaseContext:
 
     def get_statuses(self, device_id):
         cursor = self.get_cursor()
-        cursor.execute("SELECT DISTINCT(Name), `TimeStamp`, `Value` FROM DataValue WHERE DeviceId = %s "
+        cursor.execute("SELECT Name, `TimeStamp`, `Value` FROM DataValue WHERE (Name, TimeStamp) IN ("
+                       "SELECT Name, MAX(`TimeStamp`) FROM DataValue WHERE DeviceId = %s "
                        "AND (Name = 'system.wan' or Name = 'system.lan' or Name like '%.status')"
-                       "ORDER BY `TimeStamp` DESC", (device_id,))
+                       "GROUP BY `Name`)", (device_id,))
 
         result = cursor.fetchall()
         cursor.close()

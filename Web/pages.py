@@ -115,7 +115,7 @@ def get_devices():
 
         device.append('False')
         if status is not None:
-            device[3] = 'False' if (datetime.now().timestamp() - status[1].timestamp()) > 600 else status[2]
+            device[3] = 'False' if ((datetime.now().timestamp()-2*3600) - status[1].timestamp()) > 600 else status[2]
 
         device_list.append(device)
 
