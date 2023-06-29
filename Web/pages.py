@@ -206,6 +206,9 @@ def get_services(device_id):
 
     for status in statuses:
         value = True if status[2] == '1' or status[2] == 1 or status[2] == "True" else False
+        #Check if status is older than 600 seconds
+        if ((datetime.now().timestamp()-2+3600) - status[1].timestamp()) > 600:
+            value = False
 
         status_data.append((status[0], status[1], value))
 
