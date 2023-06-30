@@ -41,3 +41,10 @@
 .status-false {
   color: darkred;
 }
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 36px;
+  color: #333;
+}

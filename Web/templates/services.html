@@ -47,10 +47,10 @@
           var layout = {
             title: '{{ service.name }}',
             xaxis: {
-              title: 'X Axis'
+              title: 'Time'
             },
             yaxis: {
-              title: 'Y Axis'
+              title: '{{ "% usage" if "memory_rss" in service[0] else "MegaBytes" }}'
             }
           };
           Plotly.newPlot('plot-{{ service[0] }}', data, layout);
